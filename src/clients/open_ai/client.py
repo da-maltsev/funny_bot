@@ -19,7 +19,7 @@ class OpenaiClient(BaseClient):
             "Content-Type": "application/json",
         }
 
-    def generate_image_b64(self, definition: str, size: str = "1024x1024", save_jpg: bool = False) -> Optional[str]:
+    async def generate_image_b64(self, definition: str, size: str = "1024x1024", save_jpg: bool = False) -> Optional[str]:
         data = {
             "prompt": definition,
             "n": 1,
@@ -27,12 +27,13 @@ class OpenaiClient(BaseClient):
             "response_format": "b64_json",
         }
 
-        response = httpx.post(
-            url=urljoin(self.base_url, "images/generations"),
-            headers=self.headers,
-            json=data,
-            timeout=10,
-        )
+        async with httpx.AsyncClient() as session:
+            response = await session.post(
+                url=urljoin(self.base_url, "images/generations"),
+                headers=self.headers,
+                json=data,
+                timeout=10,
+            )
         self._check_response(response)
 
         b64_content = self._get_b64_content(response)

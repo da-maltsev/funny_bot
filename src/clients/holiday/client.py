@@ -19,7 +19,7 @@ class HolidayClient(BaseClient):
         self.headers = {"Content-Type": "application/json"}
         self.params = {"key": self.token}
 
-    def get_list_of_holidays(
+    async def get_list_of_holidays(
         self,
         month: int,
         year: int,
@@ -35,12 +35,13 @@ class HolidayClient(BaseClient):
         params.update(self.params)
         params = {k: v for k, v in params.items() if v}
 
-        response = httpx.get(
-            urljoin(self.base_url, "holidays"),
-            headers=self.headers,
-            params=params,  # type: ignore
-            timeout=10,
-        )
+        async with httpx.AsyncClient() as session:
+            response = await session.get(
+                urljoin(self.base_url, "holidays"),
+                headers=self.headers,
+                params=params,  # type: ignore
+                timeout=10,
+            )
         self._check_response(response)
 
         return self._get_list_of_holidays_from_response(response)

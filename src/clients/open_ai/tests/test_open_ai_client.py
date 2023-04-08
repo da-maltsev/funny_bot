@@ -31,23 +31,23 @@ def mock_logger(mocker):
     return mocker.patch("logging.error")
 
 
-def test_correct_image_generation(client: OpenaiClient, mock_post_response, mock_image_save, mock_logger):
-    result = client.generate_image_b64(definition="nice cat")
+async def test_correct_image_generation(client: OpenaiClient, mock_post_response, mock_image_save, mock_logger):
+    result = await client.generate_image_b64(definition="nice cat")
 
     assert result == "AAAYYYYYYLMAOOOO"
     mock_image_save.assert_not_called()
     mock_logger.assert_not_called()
 
 
-def test_correct_image_generation_with_save(client: OpenaiClient, mock_post_response, mock_image_save, mock_logger):
-    result = client.generate_image_b64(definition="nice cat", save_jpg=True)
+async def test_correct_image_generation_with_save(client: OpenaiClient, mock_post_response, mock_image_save, mock_logger):
+    result = await client.generate_image_b64(definition="nice cat", save_jpg=True)
 
     assert result == "AAAYYYYYYLMAOOOO"
     mock_image_save.assert_called_once_with("AAAYYYYYYLMAOOOO")
     mock_logger.assert_not_called()
 
 
-def test_fail_image_generation(client: OpenaiClient, mock_post_response_fail, mock_logger):
-    client.generate_image_b64(definition="nice cat")
+async def test_fail_image_generation(client: OpenaiClient, mock_post_response_fail, mock_logger):
+    await client.generate_image_b64(definition="nice cat")
 
     mock_logger.assert_called_once()
