@@ -1,6 +1,6 @@
 import pytest
 
-from open_ai import OpenaiClient
+from clients import OpenaiClient
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def mock_post_response_fail(httpx_mock):
 
 @pytest.fixture
 def mock_image_save(mocker):
-    return mocker.patch("open_ai.client.OpenaiClient._save_jpg_from_b64")
+    return mocker.patch("clients.open_ai.client.OpenaiClient._save_jpg_from_b64")
 
 
 @pytest.fixture

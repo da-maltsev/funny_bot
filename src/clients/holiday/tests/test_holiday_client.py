@@ -1,7 +1,7 @@
 import datetime
 import pytest
 
-from holiday.client import HolidayClient
+from clients import HolidayClient
 
 
 @pytest.fixture

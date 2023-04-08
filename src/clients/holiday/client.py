@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 
 import httpx
 
-from base import BaseClient
+from clients import BaseClient
 
 
 @dataclass
