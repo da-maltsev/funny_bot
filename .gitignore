@@ -121,5 +121,4 @@ static
 db.sqlite
 
 
-.helm/charts/*.tgz
-.werf_secret_key
+.jpg
