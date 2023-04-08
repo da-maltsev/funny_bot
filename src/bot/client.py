@@ -30,7 +30,14 @@ class TelegramBot:
         self.application.run_polling()
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")  # type: ignore
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Здарова!\nЯ полезный ботяра, чтобы узнать, что я могу, введи /help")  # type: ignore
+
+    async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,  # type: ignore
+            text="\nКоманда /make_picture просит нейросеть сделать картинку с твоим описанием\
+                                       \nКоманда /today_picture узнает, есть ли сегодня праздник и пришлёт иллюстарцию к нему, если праздника нет, то пришлёт просто что-то приятное.",
+        )
 
     async def today_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await PictureOfTheDay(*self.clients, context)(update.effective_chat.id)  # type: ignore
@@ -43,6 +50,7 @@ class TelegramBot:
         self.add_commands(
             [
                 self.start,
+                self.help,
                 self.today_picture,
                 self.make_picture,
             ]

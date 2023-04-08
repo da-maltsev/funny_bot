@@ -16,7 +16,11 @@ class PictureOfTheDay(BaseBotService):
 
         await self.open_ai_client.generate_image_b64(description, filename=photo_name)
         await self.context.bot.send_photo(chat_id=chat_id, photo=photo_name)  # type: ignore
-        await self.context.bot.send_message(chat_id=chat_id, text=f'This is "{text}"')  # type: ignore
+
+        if text == self.holiday_client.true_holiday:
+            text = f"Не забывайте никогда о том, что 09/09 {text}"
+
+        await self.context.bot.send_message(chat_id=chat_id, text=f"{text}")  # type: ignore
 
         os.remove(photo_name)
 
