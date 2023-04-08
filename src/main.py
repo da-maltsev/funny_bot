@@ -1,7 +1,6 @@
+from holiday.client import HolidayClient
 from open_ai.client import OpenaiClient
 from settings import settings
 
-token = settings.get("OPENAI_TOKEN")
-client = OpenaiClient(token)
-
-image = client.generate_image("Sunray cat mainkun")
+open_ai_client = OpenaiClient(settings.OPENAI_TOKEN)
+holiday_client = HolidayClient(settings.HOLIDAY_TOKEN)
