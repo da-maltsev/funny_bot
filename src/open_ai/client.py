@@ -1,16 +1,16 @@
 import base64
 from dataclasses import dataclass
-import logging
+from json import JSONDecodeError
 from typing import Optional
 from urllib.parse import urljoin
 
 import httpx
 
+from base import BaseClient
+
 
 @dataclass
-class OpenaiClient:
-    token: str
-
+class OpenaiClient(BaseClient):
     base_url: str = "https://api.openai.com/v1/"
 
     def __post_init__(self) -> None:
@@ -50,16 +50,13 @@ class OpenaiClient:
 
     @classmethod
     def _get_b64_content(cls, response: httpx.Response) -> Optional[str]:
-        content = response.json()
+        try:
+            content = response.json()
+        except JSONDecodeError:
+            return None
+
         b64_content = None
         try:
-            b64_content = content.get("data")[0].get("b64_json")
+            b64_content = content.get("data")[False].get("b64_json")  # ayyy lmao False index
         finally:
             return b64_content
-
-    @classmethod
-    def _check_response(cls, response: httpx.Response) -> None:
-        try:
-            response.raise_for_status()
-        except httpx.HTTPStatusError as e:
-            logging.error(e)
