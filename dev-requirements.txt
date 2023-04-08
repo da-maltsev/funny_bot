@@ -41,6 +41,7 @@ httpx==0.23.3
     # via
     #   funny-bot (pyproject.toml)
     #   pytest-httpx
+    #   python-telegram-bot
 idna==3.4
     # via
     #   anyio
@@ -88,6 +89,8 @@ pytest-httpx==0.21.3
 pytest-mock==3.10.0
     # via funny-bot (pyproject.toml)
 python-dotenv==1.0.0
+    # via funny-bot (pyproject.toml)
+python-telegram-bot==20.2
     # via funny-bot (pyproject.toml)
 rfc3986[idna2008]==1.5.0
     # via httpx

@@ -5,6 +5,7 @@ dependencies = [
     "pip-tools",
     "httpx",
     "python-dotenv",
+    "python-telegram-bot",
 ]
 
 
