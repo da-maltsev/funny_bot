@@ -1,0 +1,60 @@
+[project]
+name = "funny_bot"
+version = "0.0.0-dev"
+dependencies = [
+    "pip-tools",
+    "httpx",
+    "python-dotenv",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "autoflake",
+    "pytest",
+    "pytest-httpx",
+    "pytest-mock",
+    "flake8",
+    "flake8-isort",
+    "flake8-pyproject",
+    "mypy",
+]
+
+
+[tool.black]
+exclude = '''
+/(
+  | migrations
+)/
+
+'''
+line_length = 160
+
+
+[tool.flake8]
+max-line-length = 160
+inline-quotes = "\""
+ignore = [
+    "E501",  # Line too long
+    "E265",  # Block comments should have one space before the pound sign (#) and the comment itself
+    "F811",  # Redefinition of unused name from line n
+    "PT001",  # Use @pytest.fixture() over @pytest.fixture
+    "SIM102",  # Use a single if-statement instead of nested if-statements
+    "SIM113",  # Use enumerate instead of manually incrementing a counter
+    "E203",  # whitespace before ':', disabled for black purposes https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+]
+exclude = [
+    ".git",
+    "__pycache__",
+]
+
+
+[tool.isort]
+profile = "google"
+line_length = 160
+extra_standard_library = ["pytest"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+use_parentheses = true
+include_trailing_comma = true
+multi_line_output = 3

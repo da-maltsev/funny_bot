@@ -112,6 +112,9 @@ dmypy.json
 .vscode
 .idea
 
+#mac_od stuff
+.DS_Store
+
 venv
 static
 .env
