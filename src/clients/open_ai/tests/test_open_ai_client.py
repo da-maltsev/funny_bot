@@ -18,7 +18,7 @@ def mock_post_response_fail(httpx_mock):
 
 @pytest.fixture
 def mock_image_save(mocker):
-    return mocker.patch("clients.open_ai.client.OpenaiClient._save_jpg_from_b64")
+    return mocker.patch("clients.open_ai.client.OpenaiClient.save_jpg_from_b64")
 
 
 @pytest.fixture
@@ -40,10 +40,10 @@ async def test_correct_image_generation(client: OpenaiClient, mock_post_response
 
 
 async def test_correct_image_generation_with_save(client: OpenaiClient, mock_post_response, mock_image_save, mock_logger):
-    result = await client.generate_image_b64(definition="nice cat", save_jpg=True)
+    result = await client.generate_image_b64(definition="nice cat", filename="True")
 
     assert result == "AAAYYYYYYLMAOOOO"
-    mock_image_save.assert_called_once_with("AAAYYYYYYLMAOOOO")
+    mock_image_save.assert_called_once_with("AAAYYYYYYLMAOOOO", "True")
     mock_logger.assert_not_called()
 
 
