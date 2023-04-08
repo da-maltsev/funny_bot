@@ -6,7 +6,10 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder
 from telegram.ext import CommandHandler
 from telegram.ext import ContextTypes
+from telegram.ext import filters
+from telegram.ext import MessageHandler
 
+from bot.filters import make_picture_filter
 from bot.services import PictureMaker
 from bot.services import PictureOfTheDay
 from clients.holiday.client import HolidayClient
@@ -30,6 +33,7 @@ class TelegramBot:
         self.application.run_polling()
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        logging.warn("Someone started")
         await context.bot.send_message(chat_id=update.effective_chat.id, text="Здарова!\nЯ полезный ботяра, чтобы узнать, что я могу, введи /help")  # type: ignore
 
     async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -40,10 +44,15 @@ class TelegramBot:
         )
 
     async def today_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        logging.info("aaaaa today")
         await PictureOfTheDay(*self.clients, context)(update.effective_chat.id)  # type: ignore
 
-    async def make_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        description = " ".join(context.args)  # type: ignore
+    async def make_picture_by_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        text = update.message.text  # type: ignore
+        len_of_trigger = make_picture_filter.len_trigger(text)  # type: ignore
+        description = text[len_of_trigger::]  # type: ignore
+        logging.info(description)
+
         await PictureMaker(*self.clients, context)(update.effective_chat.id, description)  # type: ignore
 
     def add_handlers(self) -> None:
@@ -52,13 +61,13 @@ class TelegramBot:
                 self.start,
                 self.help,
                 self.today_picture,
-                self.make_picture,
             ]
         )
+        self.add_message_nadlers()
 
     def add_commands(self, functions: list[Callable]) -> None:
         for func in functions:
             self.application.add_handler(CommandHandler(func.__name__, func))
 
-    # def add_message_nadlers(self) -> None:
-    #     self.application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), make_picture))
+    def add_message_nadlers(self) -> None:
+        self.application.add_handler(MessageHandler(make_picture_filter & (~filters.COMMAND), self.make_picture_by_message))
