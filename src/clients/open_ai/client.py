@@ -15,6 +15,7 @@ class OpenaiClient(BaseClient):
     image_name: str = "temp_image.jpg"
 
     timeout: float = 60.0
+    timeout_message: str = "Нейросеть очень долго думала и мы решили не ждать"
     default_answer: str = "Нейросеть не в силах вам помочь"
 
     def __post_init__(self) -> None:
@@ -32,12 +33,16 @@ class OpenaiClient(BaseClient):
         }
 
         async with httpx.AsyncClient() as session:
-            response = await session.post(
-                url=urljoin(self.base_url, "images/generations"),
-                headers=self.headers,
-                json=data,
-                timeout=self.timeout / 2,
-            )
+            try:
+                response = await session.post(
+                    url=urljoin(self.base_url, "images/generations"),
+                    headers=self.headers,
+                    json=data,
+                    timeout=self.timeout / 2,
+                )
+            except httpx.ReadTimeout:
+                return self.timeout_message
+
         self._check_response(response)
 
         b64_content = self._get_b64_content(response)
@@ -61,12 +66,16 @@ class OpenaiClient(BaseClient):
         }
 
         async with httpx.AsyncClient() as session:
-            response = await session.post(
-                url=urljoin(self.base_url, "chat/completions"),
-                headers=self.headers,
-                json=data,
-                timeout=self.timeout,
-            )
+            try:
+                response = await session.post(
+                    url=urljoin(self.base_url, "chat/completions"),
+                    headers=self.headers,
+                    json=data,
+                    timeout=self.timeout * 5,
+                )
+            except httpx.ReadTimeout:
+                return self.timeout_message
+
         self._check_response(response)
 
         return self.get_answer_from_response(response)

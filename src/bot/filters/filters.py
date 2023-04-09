@@ -27,6 +27,7 @@ class AskQuestionFilter(MessageFilter):
         "Бот ответь",
         "Бот как думаешь",
         "Бот скажи",
+        "Бот напиши",
     ]
     list_of_toxic = [
         "Э слыш",

@@ -36,12 +36,15 @@ class HolidayClient(BaseClient):
         params = {k: v for k, v in params.items() if v}
 
         async with httpx.AsyncClient() as session:
-            response = await session.get(
-                urljoin(self.base_url, "holidays"),
-                headers=self.headers,
-                params=params,  # type: ignore
-                timeout=10,
-            )
+            try:
+                response = await session.get(
+                    urljoin(self.base_url, "holidays"),
+                    headers=self.headers,
+                    params=params,  # type: ignore
+                    timeout=10,
+                )
+            except httpx.HTTPError:
+                return [(self.true_holiday, datetime.date(1999, 9, 9))]
         self._check_response(response)
 
         return self._get_list_of_holidays_from_response(response)
