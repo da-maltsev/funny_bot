@@ -9,7 +9,10 @@ from telegram.ext import ContextTypes
 from telegram.ext import filters
 from telegram.ext import MessageHandler
 
+from bot.filters import ask_question_filter
 from bot.filters import make_picture_filter
+from bot.help_text import help_text
+from bot.services import AskQuestionService
 from bot.services import PictureMaker
 from bot.services import PictureOfTheDay
 from clients.holiday.client import HolidayClient
@@ -39,21 +42,20 @@ class TelegramBot:
     async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,  # type: ignore
-            text="\nКоманда /today_picture узнает, есть ли сегодня праздник и пришлёт иллюстарцию к нему, если праздника нет, то пришлёт просто что-то приятное.\
-                \nУ нейросети можно попросить сделать картинку, написав в чат 'Картинка где / Хочу картинку где'",
+            text=help_text,
         )
 
     async def today_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.info("today picture was called")
         await PictureOfTheDay(*self.clients, context)(update.effective_chat.id)  # type: ignore
 
-    async def make_picture_by_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        text = update.message.text  # type: ignore
-        len_of_trigger = make_picture_filter.len_trigger(text)  # type: ignore
-        description = text[len_of_trigger::]  # type: ignore
-        logging.info(description)
+    async def make_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        logging.info(update.message.text)  # type: ignore
+        await PictureMaker(*self.clients, context)(update.effective_chat.id, update.message.text)  # type: ignore
 
-        await PictureMaker(*self.clients, context)(update.effective_chat.id, description)  # type: ignore
+    async def ask_question(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        logging.info(update.message.text)  # type: ignore
+        await AskQuestionService(*self.clients, context)(update.effective_chat.id, update.message.text)  # type: ignore
 
     def add_handlers(self) -> None:
         self.add_commands(
@@ -70,4 +72,5 @@ class TelegramBot:
             self.application.add_handler(CommandHandler(func.__name__, func))
 
     def add_message_nadlers(self) -> None:
-        self.application.add_handler(MessageHandler(make_picture_filter & (~filters.COMMAND), self.make_picture_by_message))
+        self.application.add_handler(MessageHandler(make_picture_filter & (~filters.COMMAND), self.make_picture))
+        self.application.add_handler(MessageHandler(ask_question_filter & (~filters.COMMAND), self.ask_question))

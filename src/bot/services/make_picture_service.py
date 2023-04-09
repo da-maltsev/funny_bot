@@ -1,11 +1,15 @@
 import os
 from typing import Optional
 
-from bot.services import BaseBotService
+from bot.filters import make_picture_filter
+from bot.services.base_bot_service import BaseBotService
 
 
 class PictureMaker(BaseBotService):
     async def __call__(self, chat_id: int, description: Optional[str]) -> None:
+        len_of_trigger = make_picture_filter.len_trigger(description)  # type: ignore
+        description = description[len_of_trigger::]  # type: ignore
+
         if not description:
             return None
 

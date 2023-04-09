@@ -3,7 +3,7 @@ import datetime
 import os
 
 from anyday_holiday import PictureDescriptorGenerator
-from bot.services import BaseBotService
+from bot.services.base_bot_service import BaseBotService
 
 
 class PictureOfTheDay(BaseBotService):

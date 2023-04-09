@@ -48,7 +48,7 @@ class OpenaiClient(BaseClient):
         return b64_content
 
     async def ask_chat_gpt(self, message: str, toxic: bool = False) -> str:
-        message = message if not toxic else f"{message} Ответь агрессивно, токсично и злобно."
+        message = message if not toxic else f"{message} Ответь так, как будто ты хулиган и хочешь быть высокомерным."
         data = {
             "model": "gpt-3.5-turbo",
             "messages": [

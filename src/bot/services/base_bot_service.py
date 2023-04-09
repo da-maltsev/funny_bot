@@ -17,6 +17,9 @@ class BaseBotService:
         await self.context.bot.send_photo(chat_id=chat_id, photo=photo_name)  # type: ignore
         await self.send_message(chat_id=chat_id, text=description)  # type: ignore
 
+    async def send_message(self, chat_id: int | str, text: str):
+        await self.context.bot.send_message(chat_id=chat_id, text=text)
+
     @classmethod
     def get_photo_name(cls) -> str:
         return f"{uuid4()}.jpg"
