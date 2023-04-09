@@ -39,12 +39,12 @@ class TelegramBot:
     async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,  # type: ignore
-            text="\nКоманда /make_picture просит нейросеть сделать картинку с твоим описанием\
-                                       \nКоманда /today_picture узнает, есть ли сегодня праздник и пришлёт иллюстарцию к нему, если праздника нет, то пришлёт просто что-то приятное.",
+            text="\nКоманда /today_picture узнает, есть ли сегодня праздник и пришлёт иллюстарцию к нему, если праздника нет, то пришлёт просто что-то приятное.\
+                \nУ нейросети можно попросить сделать картинку, написав в чат 'Картинка где / Хочу картинку где'",
         )
 
     async def today_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.info("aaaaa today")
+        logging.info("today picture was called")
         await PictureOfTheDay(*self.clients, context)(update.effective_chat.id)  # type: ignore
 
     async def make_picture_by_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
