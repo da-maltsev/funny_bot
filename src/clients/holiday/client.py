@@ -25,7 +25,7 @@ class HolidayClient(BaseClient):
         year: int,
         day: Optional[int] = None,
         country: str = "RU",
-    ) -> list:
+    ) -> list[tuple[str, datetime.date]]:
         params = {
             "day": day,
             "month": month,

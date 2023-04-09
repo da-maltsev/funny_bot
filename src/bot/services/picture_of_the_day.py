@@ -1,7 +1,6 @@
 from collections import namedtuple
 import datetime
 import os
-from uuid import uuid4
 
 from anyday_holiday import PictureDescriptorGenerator
 from bot.services import BaseBotService
@@ -12,15 +11,14 @@ class PictureOfTheDay(BaseBotService):
 
     async def __call__(self, chat_id: int) -> None:
         [description, text] = await self.get_picture_description_for_today()
-        photo_name = f"{uuid4()}.jpg"
+        photo_name = self.get_photo_name()
 
         await self.open_ai_client.generate_image_b64(description, filename=photo_name)
-        await self.context.bot.send_photo(chat_id=chat_id, photo=photo_name)  # type: ignore
 
         if text == self.holiday_client.true_holiday:
             text = f"Не забывайте никогда о том, что 09/09 {text}"
 
-        await self.context.bot.send_message(chat_id=chat_id, text=f"{text}")  # type: ignore
+        await self.send_photo(chat_id, photo_name, description=text)
 
         os.remove(photo_name)
 

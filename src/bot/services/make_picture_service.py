@@ -1,6 +1,5 @@
 import os
 from typing import Optional
-from uuid import uuid4
 
 from bot.services import BaseBotService
 
@@ -10,10 +9,14 @@ class PictureMaker(BaseBotService):
         if not description:
             return None
 
-        photo_name = f"{uuid4()}.jpg"
-
+        photo_name = self.get_photo_name()
         await self.open_ai_client.generate_image_b64(description, filename=photo_name)
-        await self.context.bot.send_photo(chat_id=chat_id, photo=photo_name)  # type: ignore
-        await self.context.bot.send_message(chat_id=chat_id, text=f'Это вот "{description}"')  # type: ignore
+
+        description = self.make_description(description)
+        await self.send_photo(chat_id, photo_name, description)
 
         os.remove(photo_name)
+
+    @classmethod
+    def make_description(cls, description: str) -> str:
+        return f'Это вот "{description}"'

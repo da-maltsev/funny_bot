@@ -1,8 +1,6 @@
 import datetime
 import pytest
 
-from clients import HolidayClient
-
 
 @pytest.fixture
 def holidays():
@@ -63,30 +61,25 @@ def result_list():
 
 
 @pytest.fixture
-def client() -> HolidayClient:
-    return HolidayClient(token="top-secret-token")
-
-
-@pytest.fixture
 def mock_logger(mocker):
     return mocker.patch("logging.error")
 
 
-async def test_succeess_get_holidays(client: HolidayClient, result_list, mock_get_response, mock_logger):
-    result = await client.get_list_of_holidays(4, 4, 2022)
+async def test_succeess_get_holidays(holiday_client, result_list, mock_get_response, mock_logger):
+    result = await holiday_client.get_list_of_holidays(4, 4, 2022)
 
     assert result == result_list
     mock_logger.assert_not_called()
 
 
-async def test_succeess_get_holidays_of_empty_list(client: HolidayClient, mock_get_response_no_holidays, mock_logger):
-    result = await client.get_list_of_holidays(4, 4, 2022)
+async def test_succeess_get_holidays_of_empty_list(holiday_client, mock_get_response_no_holidays, mock_logger):
+    result = await holiday_client.get_list_of_holidays(4, 4, 2022)
 
-    assert result == [(client.true_holiday, datetime.date(1999, 9, 9))]
+    assert result == [(holiday_client.true_holiday, datetime.date(1999, 9, 9))]
     mock_logger.assert_not_called()
 
 
-async def test_fail_get_holidays(client: HolidayClient, mock_get_response_fail, mock_logger):
-    await client.get_list_of_holidays(4, 4, 2022)
+async def test_fail_get_holidays(holiday_client, mock_get_response_fail, mock_logger):
+    await holiday_client.get_list_of_holidays(4, 4, 2022)
 
     mock_logger.assert_called_once()
