@@ -2,8 +2,33 @@ import pytest
 
 
 @pytest.fixture
-def mock_post_response(httpx_mock):
+def mock_post_response_image(httpx_mock):
     httpx_mock.add_response(method="POST", json={"data": [{"b64_json": "AAAYYYYYYLMAOOOO"}]})
+
+
+@pytest.fixture
+def mock_post_response_chat(httpx_mock):
+    httpx_mock.add_response(
+        method="POST",
+        json={
+            "model": "gpt-3.5-turbo-0301",
+            "usage": {
+                "prompt_tokens": 30,
+                "completion_tokens": 76,
+                "total_tokens": 106,
+            },
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": "Как искусственный интеллект.",
+                    },
+                    "finish_reason": "stop",
+                    "index": 0,
+                }
+            ],
+        },
+    )
 
 
 @pytest.fixture
@@ -24,7 +49,7 @@ def mock_logger(mocker):
     return mocker.patch("logging.error")
 
 
-async def test_correct_image_generation(open_ai_client, mock_post_response, mock_image_save, mock_logger):
+async def test_correct_image_generation(open_ai_client, mock_post_response_image, mock_image_save, mock_logger):
     result = await open_ai_client.generate_image_b64(definition="nice cat")
 
     assert result == "AAAYYYYYYLMAOOOO"
@@ -32,7 +57,7 @@ async def test_correct_image_generation(open_ai_client, mock_post_response, mock
     mock_logger.assert_not_called()
 
 
-async def test_correct_image_generation_with_save(open_ai_client, mock_post_response, mock_image_save, mock_logger):
+async def test_correct_image_generation_with_save(open_ai_client, mock_post_response_image, mock_image_save, mock_logger):
     result = await open_ai_client.generate_image_b64(definition="nice cat", filename="True")
 
     assert result == "AAAYYYYYYLMAOOOO"
@@ -44,3 +69,17 @@ async def test_fail_image_generation(open_ai_client, mock_post_response_fail, mo
     await open_ai_client.generate_image_b64(definition="nice cat")
 
     mock_logger.assert_called_once()
+
+
+async def test_success_answer_generation(open_ai_client, mock_post_response_chat, mock_logger):
+    result = await open_ai_client.ask_chat_gpt("tell me why")
+
+    mock_logger.assert_not_called()
+    assert result == "Как искусственный интеллект."
+
+
+async def test_fail_answer_generation(open_ai_client, mock_post_response_fail, mock_logger):
+    result = await open_ai_client.ask_chat_gpt(message="nice cat")
+
+    mock_logger.assert_called_once()
+    assert result == open_ai_client.default_answer
