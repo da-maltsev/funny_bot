@@ -19,6 +19,6 @@ ADD src /src
 
 ARG RELEASE=dev-untagged
 
-USER nobody
+USER root
 
 CMD python main.py
