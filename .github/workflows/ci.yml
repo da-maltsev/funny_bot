@@ -80,12 +80,13 @@ jobs:
       - name: Store default environment file to be runnable at the developer machine
         run: cp src/.env.example src/.env
 
-      - name: Login to Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
         uses: docker/build-push-action@v3
@@ -93,8 +94,8 @@ jobs:
           context: .
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
-            damaltsev/my_funny_bot:latest
-            damaltsev/my_funny_bot:${{ github.sha }}
+            ghcr.io/${{ steps.image.outputs.lowercase }}:latest
+            ghcr.io/${{ steps.image.outputs.lowercase }}:${{ github.sha }}
           build-args: |
             PYTHON_VERSION=${{ steps.setup-python.outputs.python-version }}
             RELEASE=${{ github.sha }}
@@ -118,4 +119,4 @@ jobs:
   #         host: ${{ secrets.DEPLOY_HOST }}
   #         username: circle
   #         key: ${{ secrets.DEPLOY_KEY }}
-  #         script: docker service update sentry_spike_bender --image ghcr.io/${{ steps.image.outputs.lowercase }}:${{ github.sha }} --with-registry-auth
+  #         script: docker service update funny_bot --image ghcr.io/${{ steps.image.outputs.lowercase }}:${{ github.sha }} --with-registry-auth
