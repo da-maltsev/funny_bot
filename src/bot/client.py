@@ -37,12 +37,12 @@ class TelegramBot:
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.warn("Someone started")
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="Здарова!\nЯ полезный ботяра, чтобы узнать, что я могу, введи /help")  # type: ignore
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=help_text.get("start", "Hello there!"))  # type: ignore
 
     async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,  # type: ignore
-            text=help_text,
+            text=help_text.get("help", "Just figure it out bro"),
         )
 
     async def today_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
