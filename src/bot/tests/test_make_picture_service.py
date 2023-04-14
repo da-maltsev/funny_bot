@@ -4,8 +4,8 @@ from bot.services import PictureMaker
 
 
 @pytest.fixture
-def service(holiday_client, open_ai_client, context) -> PictureMaker:
-    return PictureMaker(holiday_client=holiday_client, open_ai_client=open_ai_client, context=context)
+def service(open_ai_client, context) -> PictureMaker:
+    return PictureMaker(open_ai_client=open_ai_client, context=context)
 
 
 @pytest.mark.parametrize(

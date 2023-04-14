@@ -6,6 +6,7 @@ dependencies = [
     "httpx",
     "python-dotenv",
     "python-telegram-bot",
+    "sentry-sdk",
 ]
 
 

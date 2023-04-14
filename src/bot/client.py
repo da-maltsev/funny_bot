@@ -14,8 +14,6 @@ from bot.filters import make_picture_filter
 from bot.help_text import help_text
 from bot.services import AskQuestionService
 from bot.services import PictureMaker
-from bot.services import PictureOfTheDay
-from clients.holiday.client import HolidayClient
 from clients.open_ai.client import OpenaiClient
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -25,11 +23,9 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
 class TelegramBot:
     token: str
     open_ai_client: OpenaiClient
-    holiday_client: HolidayClient
 
     def __post_init__(self):
         self.application = ApplicationBuilder().token(self.token).build()
-        self.clients = [self.open_ai_client, self.holiday_client]
 
     def __call__(self):
         self.add_handlers()
@@ -46,27 +42,21 @@ class TelegramBot:
             text=help_text.get("help", "Just figure it out bro"),
         )
 
-    async def today_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.info("today picture was called")
-        user_name = self.user_name_from_update(update)
-        await PictureOfTheDay(*self.clients, context)(update.effective_chat.id, user_name)  # type: ignore
-
     async def make_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.info(update.message.text)  # type: ignore
         user_name = self.user_name_from_update(update)
-        await PictureMaker(*self.clients, context)(update.effective_chat.id, update.message.text, user_name)  # type: ignore
+        await PictureMaker(self.open_ai_client, context)(update.effective_chat.id, update.message.text, user_name)  # type: ignore
 
     async def ask_question(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.info(update.message.text)  # type: ignore
         user_name = self.user_name_from_update(update)
-        await AskQuestionService(*self.clients, context)(update.effective_chat.id, update.message.text, user_name)  # type: ignore
+        await AskQuestionService(self.open_ai_client, context)(update.effective_chat.id, update.message.text, user_name)  # type: ignore
 
     def add_handlers(self) -> None:
         self.add_commands(
             [
                 self.start,
                 self.help,
-                self.today_picture,
             ]
         )
         self.add_message_nadlers()
