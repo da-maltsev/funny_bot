@@ -15,7 +15,7 @@ class AskQuestionService(BaseBotService):
         "Отвечает Никита...",
     ]
 
-    async def __call__(self, chat_id: int, message: Optional[str]) -> None:
+    async def __call__(self, chat_id: int, message: Optional[str], user_name: Optional[str] = None) -> None:
         if not message:
             return None
 
@@ -27,4 +27,6 @@ class AskQuestionService(BaseBotService):
         await self.send_message(chat_id, wait_text)
 
         text = await self.open_ai_client.ask_chat_gpt(message, toxic=toxic)
-        await self.send_message(chat_id, text)
+
+        response = f"{self.get_autoresponse(user_name).title()}, вот что я скажу:\n{text}"
+        await self.send_message(chat_id, response)

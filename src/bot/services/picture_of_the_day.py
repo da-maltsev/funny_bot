@@ -1,6 +1,7 @@
 from collections import namedtuple
 import datetime
 import os
+from typing import Optional
 
 from anyday_holiday import PictureDescriptorGenerator
 from bot.services.base_bot_service import BaseBotService
@@ -9,8 +10,9 @@ from bot.services.base_bot_service import BaseBotService
 class PictureOfTheDay(BaseBotService):
     picture_descriptor_generator: PictureDescriptorGenerator = PictureDescriptorGenerator()
 
-    async def __call__(self, chat_id: int) -> None:
-        await self.send_message(chat_id, "Посмотрим какой сегодня есть повод...")
+    async def __call__(self, chat_id: int, user_name: Optional[str] = None) -> None:
+        autorepsonse = f"Посмотрим какой сегодня есть повод, {self.get_autoresponse(user_name)}."
+        await self.send_message(chat_id, autorepsonse)
 
         [description, text] = await self.get_picture_description_for_today()
         photo_name = self.get_photo_name()

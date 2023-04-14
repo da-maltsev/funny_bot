@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 from uuid import uuid4
 
 from telegram.ext import ContextTypes
@@ -23,3 +24,7 @@ class BaseBotService:
     @classmethod
     def get_photo_name(cls) -> str:
         return f"{uuid4()}.jpg"
+
+    @classmethod
+    def get_autoresponse(cls, user_name: Optional[str]) -> str:
+        return user_name if user_name else "дружище"

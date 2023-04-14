@@ -37,7 +37,7 @@ class TelegramBot:
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.warn("Someone started")
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=help_text.get("start", "Hello there!"))  # type: ignore
+        await context.bot.send_message(chat_id=update.effective_chat.id, text=f"{update.message.from_user.first_name}!\n{help_text.get('start', 'Hello there!')}")  # type: ignore
 
     async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await context.bot.send_message(

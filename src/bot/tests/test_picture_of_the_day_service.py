@@ -51,4 +51,4 @@ async def test_all_calls_were_made_no_holiday(service, mocker, mock_open_ai_call
     mock_open_ai_call.assert_called_once_with("something", filename="lmao.jpg")
     mock_remove_file.assert_called_once_with("lmao.jpg")
     mock_send_photo.assert_called_once_with(322, "lmao.jpg", description=f"Не забывайте никогда о том, что 09/09 {service.holiday_client.true_holiday}")
-    mock_send_message.assert_called()
+    mock_send_message.assert_called
