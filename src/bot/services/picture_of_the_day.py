@@ -10,6 +10,8 @@ class PictureOfTheDay(BaseBotService):
     picture_descriptor_generator: PictureDescriptorGenerator = PictureDescriptorGenerator()
 
     async def __call__(self, chat_id: int) -> None:
+        await self.send_message(chat_id, "Посмотрим какой сегодня есть повод...")
+
         [description, text] = await self.get_picture_description_for_today()
         photo_name = self.get_photo_name()
 

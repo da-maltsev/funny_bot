@@ -13,7 +13,7 @@ from clients import BaseClient
 class HolidayClient(BaseClient):
     base_url: str = "https://holidayapi.com/v1/"
 
-    true_holiday: str = "Nice person birthday"
+    true_holiday: str = "День рождения у автора"
 
     def __post_init__(self):
         self.headers = {"Content-Type": "application/json"}

@@ -13,13 +13,15 @@ class PictureMaker(BaseBotService):
         if not description:
             return None
 
-        photo_name = self.get_photo_name()
-        await self.open_ai_client.generate_image_b64(description, filename=photo_name)
+        await self.send_message(chat_id, text=f"Сейчас собразим что это такое - {description}")
+
+        photo_uuid = self.get_photo_name()
+        await self.open_ai_client.generate_image_b64(description, filename=photo_uuid)
 
         description = self.make_description(description)
-        await self.send_photo(chat_id, photo_name, description)
+        await self.send_photo(chat_id, photo_uuid, description)
 
-        os.remove(photo_name)
+        os.remove(photo_uuid)
 
     @classmethod
     def make_description(cls, description: str) -> str:
