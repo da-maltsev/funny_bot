@@ -126,8 +126,8 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
-          cd bot
-          docker rm -vf $(docker ps -aq)
-          docker rmi -f $(docker images -aq)
-          docker pull ghcr.io/${{ steps.image.outputs.lowercase }}:latest
-          docker run -d -e OPENAI_TOKEN=${{ secrets.OPENAI_TOKEN }} -e HOLIDAY_TOKEN=${{ secrets.HOLIDAY_TOKEN }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} ghcr.io/${{ steps.image.outputs.lowercase }}
+            cd bot
+            docker rm -vf $(docker ps -aq)
+            docker rmi -f $(docker images -aq)
+            docker pull ghcr.io/${{ steps.image.outputs.lowercase }}:latest
+            docker run -d -e OPENAI_TOKEN=${{ secrets.OPENAI_TOKEN }} -e HOLIDAY_TOKEN=${{ secrets.HOLIDAY_TOKEN }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} ghcr.io/${{ steps.image.outputs.lowercase }}
