@@ -4,8 +4,8 @@ from bot.services.base_bot_service import BaseBotService
 
 
 @pytest.fixture
-def service(holiday_client, open_ai_client, context) -> BaseBotService:
-    return BaseBotService(holiday_client=holiday_client, open_ai_client=open_ai_client, context=context)
+def service(open_ai_client, context) -> BaseBotService:
+    return BaseBotService(open_ai_client=open_ai_client, context=context)
 
 
 def test_get_photo_name(mocker, service):

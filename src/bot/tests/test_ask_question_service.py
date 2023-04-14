@@ -4,8 +4,8 @@ from bot.services import AskQuestionService
 
 
 @pytest.fixture
-def service(holiday_client, open_ai_client, context) -> AskQuestionService:
-    return AskQuestionService(holiday_client=holiday_client, open_ai_client=open_ai_client, context=context)
+def service(open_ai_client, context) -> AskQuestionService:
+    return AskQuestionService(open_ai_client=open_ai_client, context=context)
 
 
 @pytest.mark.parametrize(
