@@ -14,11 +14,14 @@ def filter():
     [
         ("Картинка, где", True),
         ("Картинка где", True),
+        ("картинка где", True),
         ("Бот дай картинку, где", True),
         ("Бот дай картинку где", True),
+        ("бот дай картинку где", True),
         ("Хочу картинку где", True),
         ("Хочу картинку, где", True),
         ("Это не работает", False),
+        ("это не работает", False),
     ],
 )
 def test_filter_passes_correct_phrase(filter, start_phrase, is_true):
