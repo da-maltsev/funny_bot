@@ -12,7 +12,8 @@ class MakePictureFilter(MessageFilter):
     ]
 
     def filter(self, message):
-        return any([message.text.lower().startswith(expression) for expression in self.list_of_triggers])
+        if message.text:
+            return any([message.text.lower().startswith(expression) for expression in self.list_of_triggers])
 
     @classmethod
     def len_trigger(cls, text: str) -> int:  # type: ignore
@@ -38,7 +39,8 @@ class AskQuestionFilter(MessageFilter):
     ]
 
     def filter(self, message):
-        return any([message.text.lower().startswith(expression) for expression in self.get_list_of_triggers()])
+        if message.text:
+            return any([message.text.lower().startswith(expression) for expression in self.get_list_of_triggers()])
 
     @classmethod
     def get_list_of_triggers(self) -> list[str]:
