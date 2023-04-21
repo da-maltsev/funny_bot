@@ -43,12 +43,12 @@ class TelegramBot:
         )
 
     async def make_picture(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.info(update.message.text)  # type: ignore
+        logging.info(update.message and update.message.text or "")  # type: ignore
         user_name = self.user_name_from_update(update)
         await PictureMaker(self.open_ai_client, context)(update.effective_chat.id, update.message.text, user_name)  # type: ignore
 
     async def ask_question(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.info(update.message.text)  # type: ignore
+        logging.info(update.message and update.message.text or "")  # type: ignore
         user_name = self.user_name_from_update(update)
         await AskQuestionService(self.open_ai_client, context)(update.effective_chat.id, update.message.text, user_name)  # type: ignore
 
