@@ -26,7 +26,10 @@ class AskQuestionService(BaseBotService):
         wait_text = choice(self.let_me_think)
         await self.send_message(chat_id, wait_text)
 
-        text = await self.open_ai_client.ask_chat_gpt(message, toxic=toxic)
+        try:
+            text = await self.open_ai_client.ask_chat_gpt(message, toxic=toxic)
+        except Exception:
+            text = "что-то пошло не так, дорогой друг"
 
         response = f"{self.get_autoresponse(user_name).title()}, вот что я скажу:\n{text}"
         await self.send_message(chat_id, response)

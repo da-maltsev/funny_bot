@@ -32,7 +32,7 @@ class TelegramBot:
         self.application.run_polling()
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.warn("Someone started")
+        logging.warning("Someone started")
         user_name = f"{self.user_name_from_update(update)}!\n" if self.user_name_from_update(update) else None
         await context.bot.send_message(chat_id=update.effective_chat.id, text=f"{user_name}{help_text.get('start', 'Hello there!')}")  # type: ignore
 
@@ -59,13 +59,13 @@ class TelegramBot:
                 self.help,
             ]
         )
-        self.add_message_nadlers()
+        self.add_message_handlers()
 
     def add_commands(self, functions: list[Callable]) -> None:
         for func in functions:
             self.application.add_handler(CommandHandler(func.__name__, func))
 
-    def add_message_nadlers(self) -> None:
+    def add_message_handlers(self) -> None:
         self.application.add_handler(MessageHandler(make_picture_filter & (~filters.COMMAND), self.make_picture))
         self.application.add_handler(MessageHandler(ask_question_filter & (~filters.COMMAND), self.ask_question))
 
