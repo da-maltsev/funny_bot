@@ -16,10 +16,14 @@ class PictureMaker(BaseBotService):
         await self.send_message(chat_id, text=f"Сейчас собразим что это такое - {description}")
 
         photo_uuid = self.get_photo_name()
-        await self.open_ai_client.generate_image_b64(description, filename=photo_uuid)
 
-        description = self.make_description(description, user_name)
-        await self.send_photo(chat_id, photo_uuid, description)
+        try:
+            await self.open_ai_client.generate_image_b64(description, filename=photo_uuid)
+
+            description = self.make_description(description, user_name)
+            await self.send_photo(chat_id, photo_uuid, description)
+        except Exception:
+            await self.send_message(chat_id, text="что-то пошло не так, дружище")
 
         os.remove(photo_uuid)
 
