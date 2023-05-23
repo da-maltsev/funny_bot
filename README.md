@@ -1,6 +1,6 @@
 # Funny bot project
      
-Here I just try to discover how AI models can be useful for me. And do some implementation of these models with telegram bot. At this moment this bot can generate images and answer questions with chatgpt-3.5.
+Here I just try to discover how AI models can be useful or just for laugh. And do some implementation of these models with telegram bot. At this moment this bot can generate images and answer questions with chatgpt-3.5.
 To run your own bot just pass your tokens into .env and go ahead!
 
 ## Installing on a local machine
