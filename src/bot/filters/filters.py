@@ -24,7 +24,7 @@ class MakePictureFilter(MessageFilter):
 
 class AskQuestionFilter(MessageFilter):
     list_of_nice = [
-        "бот есть вопрос",
+        "бот," "бот есть вопрос",
         "бот ответь",
         "бот как думаешь",
         "бот скажи",

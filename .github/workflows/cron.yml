@@ -1,0 +1,28 @@
+---
+name: Regular redeploy
+on:
+    schedule:
+    - cron: "*/10 * * * *"
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Read image identifiers
+            id: image
+            uses: ASzc/change-string-case-action@v1
+            with:
+              string: ${{ github.repository }}
+    
+          - name: Update image
+            uses: appleboy/ssh-action@v0.1.7
+            with:
+              host: ${{ secrets.DEPLOY_HOST }}
+              username: ${{ secrets.DEPLOY_USERNAME }}
+              password: ${{ secrets.DEPLOY_PASSWORD }}
+              script: |
+                cd bot
+                docker rm -vf $(docker ps -aq)
+                docker rmi -f $(docker images -aq)
+                docker pull ghcr.io/${{ steps.image.outputs.lowercase }}:latest
+                docker run -d -e OPENAI_TOKEN=${{ secrets.OPENAI_TOKEN }} -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} ghcr.io/${{ steps.image.outputs.lowercase }}
