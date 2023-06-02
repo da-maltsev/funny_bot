@@ -127,7 +127,7 @@ jobs:
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
             cd bot
-            docker rm -vf $(docker ps -aq)
-            docker rmi -f $(docker images -aq)
+            docker rm $(docker ps -a | grep '${{ steps.image.outputs.lowercase }}' | awk '{print $1}')
+            docker rmi $(docker images | grep '${{ steps.image.outputs.lowercase }}')
             docker pull ghcr.io/${{ steps.image.outputs.lowercase }}:latest
             docker run -d -e OPENAI_TOKEN=${{ secrets.OPENAI_TOKEN }} -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} ghcr.io/${{ steps.image.outputs.lowercase }}
