@@ -2,7 +2,7 @@
 name: Regular redeploy
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 2 * * *"
 
 jobs:
   deploy:
@@ -22,7 +22,9 @@ jobs:
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
             cd bot
-            docker pull ghcr.io/${{ steps.image.outputs.lowercase }}:latest
-            docker rm -vf $(docker ps -a | grep '${{ steps.image.outputs.lowercase }}' | awk '{print $1}')
-            docker rmi -f $(docker images | grep '${{ steps.image.outputs.lowercase }}')
-            docker run -d -e OPENAI_TOKEN=${{ secrets.OPENAI_TOKEN }} -e SENTRY_DSN=${{ secrets.SENTRY_DSN }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} ghcr.io/${{ steps.image.outputs.lowercase }}
+            git pull
+            docker compose pull
+            echo "${{ secrets.ENV_FILE }}" > .env
+            docker compose up -d
+            docker container prune -f
+            docker image prune -a -f

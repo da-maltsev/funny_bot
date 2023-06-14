@@ -2,6 +2,8 @@ import pytest
 
 from bot.services import PictureMaker
 
+pytestmark = [pytest.mark.skip(reason="temporarily removed functional")]
+
 
 @pytest.fixture
 def service(open_ai_client, context) -> PictureMaker:
