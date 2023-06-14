@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  bot:
+    image: ghcr.io/da-maltsev/funny_bot:latest
+    container_name: bot
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - OPENAI_TOKEN=${OPENAI_TOKEN}
+      - SENTRY_DSN=${SENTRY_DSN}
+    command: python main.py
+    restart: unless-stopped

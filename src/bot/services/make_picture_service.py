@@ -7,6 +7,11 @@ from bot.services.base_bot_service import BaseBotService
 
 class PictureMaker(BaseBotService):
     async def __call__(self, chat_id: int, description: Optional[str], user_name: Optional[str] = None) -> None:
+        await self.send_message(chat_id, text="Функционал генерации изображений временно отключен")
+
+
+class PictureMakerOld(BaseBotService):
+    async def __call__(self, chat_id: int, description: Optional[str], user_name: Optional[str] = None) -> None:
         len_of_trigger = make_picture_filter.len_trigger(description)  # type: ignore
         description = description[len_of_trigger::]  # type: ignore
 
