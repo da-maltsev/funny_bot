@@ -8,7 +8,7 @@ anyio==3.7.1
     # via httpcore
 autoflake==2.2.0
     # via funny-bot (pyproject.toml)
-black==23.7.0
+black==24.3.0
     # via funny-bot (pyproject.toml)
 build==0.10.0
     # via pip-tools
