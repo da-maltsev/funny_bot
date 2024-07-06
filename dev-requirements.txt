@@ -12,7 +12,7 @@ black==24.3.0
     # via funny-bot (pyproject.toml)
 build==0.10.0
     # via pip-tools
-certifi==2023.7.22
+certifi==2024.7.4
     # via
     #   httpcore
     #   httpx
